@@ -4,6 +4,7 @@
 #include "catch.hpp"
 
 #include <State.h>
+#include <AIUtil.h>
 
 const size_t kBranchFactor{ 3 };
 const size_t kNumPlayers{ 2 };
@@ -88,55 +89,13 @@ public:
 	};
 };
 
-// Inputs:
-//     alpha - Highest (Best) utility seen by maximizer
-//     beta  - Lowest (Best) utility seen by minimizer
-int minimax(IState& rState, size_t* pBestActionId, int alpha = std::numeric_limits<int>::min(), int beta = std::numeric_limits<int>::max())
-{
-	int& rBestActionUtility = (rState.turn() == 0) ? alpha : beta;
-
-	for (size_t i = 0; (alpha < beta) && i < rState.numActionsAvailable(); ++i)
-	{
-		rState.performAction(i);
-
-		// Get state utility
-		int stateUtility;
-		if (rState.isTerminal())
-		{
-			stateUtility = rState.utility();
-		}
-		else
-		{
-			stateUtility = minimax(rState, nullptr, alpha, beta);
-		}
-
-		rState.rollbackAction(i);
-
-		// Update best move if better
-		if ((rState.turn() == 0) ? (stateUtility > rBestActionUtility) : (stateUtility < rBestActionUtility))
-		{
-			// Set best action for the root node
-			if (pBestActionId != nullptr)
-			{
-				*pBestActionId = i;
-			}
-
-			rBestActionUtility = stateUtility;
-		}
-	}
-
-	return rBestActionUtility;
-}
-
-
-
 TEST_CASE("Minimax")
 {
 	TestState state;
 
 	size_t expectedActionId = 2;
 	size_t actualActionId;
-	int utility = minimax(state, &actualActionId);
+	int utility = AIUtil::minimax(state, &actualActionId);
 	REQUIRE(utility == 11);
 	REQUIRE(actualActionId == expectedActionId);
 	REQUIRE(state.actualAccess == state.expectedAccess);
