@@ -91,7 +91,7 @@ public:
 // Inputs:
 //     alpha - Highest (Best) utility seen by maximizer
 //     beta  - Lowest (Best) utility seen by minimizer
-int minimax(IState& rState, size_t& rBestActionId, int alpha = std::numeric_limits<int>::min(), int beta = std::numeric_limits<int>::max())
+int minimax(IState& rState, size_t* pBestActionId, int alpha = std::numeric_limits<int>::min(), int beta = std::numeric_limits<int>::max())
 {
 	int& rBestActionUtility = (rState.turn() == 0) ? alpha : beta;
 
@@ -107,7 +107,7 @@ int minimax(IState& rState, size_t& rBestActionId, int alpha = std::numeric_limi
 		}
 		else
 		{
-			stateUtility = minimax(rState, rBestActionId, alpha, beta);
+			stateUtility = minimax(rState, nullptr, alpha, beta);
 		}
 
 		rState.rollbackAction(i);
@@ -115,7 +115,12 @@ int minimax(IState& rState, size_t& rBestActionId, int alpha = std::numeric_limi
 		// Update best move if better
 		if ((rState.turn() == 0) ? (stateUtility > rBestActionUtility) : (stateUtility < rBestActionUtility))
 		{
-			rBestActionId = i;
+			// Set best action for the root node
+			if (pBestActionId != nullptr)
+			{
+				*pBestActionId = i;
+			}
+
 			rBestActionUtility = stateUtility;
 		}
 	}
@@ -131,7 +136,7 @@ TEST_CASE("Minimax")
 
 	size_t expectedActionId = 2;
 	size_t actualActionId;
-	int utility = minimax(state, actualActionId);
+	int utility = minimax(state, &actualActionId);
 	REQUIRE(utility == 11);
 	REQUIRE(actualActionId == expectedActionId);
 	REQUIRE(state.actualAccess == state.expectedAccess);
