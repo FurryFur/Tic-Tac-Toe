@@ -9,3 +9,6 @@ However, I was short on time so didn't end up writing test cases for these.
 Some code is probably unnecessarily split up between the CGameState and CGame classes.
 This is a result of implementing some things in CGame initially before I decided to use CGameState 
 (the implementation of the state interface used in the minimax algorithm).
+
+I had trouble writing a nice win check function. I would have liked to have timed a few different
+implementations of this to see if I couldn't achieve better or similar speeds with cleaner code.
