@@ -153,7 +153,7 @@ WinMain(HINSTANCE _hInstance, HINSTANCE _hPrevInstance, LPSTR _lpCmdline, int _i
             rGame.ExecuteOneFrame();
 
 			// Check win condition
-			EWIN_STATE winState = rGame.CheckWinCondition();
+			EWIN_STATE winState = rGame.GetWinState();
 			if (winState != NO_WIN)
 			{
 				switch (winState)
