@@ -95,7 +95,7 @@ TEST_CASE("Minimax")
 
 	size_t expectedActionId = 2;
 	size_t actualActionId;
-	int Utility = AIUtil::minimax(state, &actualActionId);
+	int Utility = AIUtil::Minimax(state, &actualActionId);
 	REQUIRE(Utility == 11);
 	REQUIRE(actualActionId == expectedActionId);
 	REQUIRE(state.actualAccess == state.expectedAccess);

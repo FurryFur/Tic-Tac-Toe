@@ -3,7 +3,7 @@
 
 namespace AIUtil
 {
-	int minimax(IState& rState, size_t* pBestActionId, int alpha, int beta)
+	int Minimax(IState& rState, size_t* pBestActionId, int alpha, int beta)
 	{
 		int& rBestActionUtility = (rState.Turn() == 0) ? alpha : beta;
 
@@ -20,7 +20,7 @@ namespace AIUtil
 			}
 			else
 			{
-				stateUtility = minimax(rState, nullptr, alpha, beta);
+				stateUtility = Minimax(rState, nullptr, alpha, beta);
 			}
 
 			// Revert to parent state 

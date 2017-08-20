@@ -47,6 +47,7 @@ CGame::CGame()
 , m_pBackBuffer(0)
 , m_state{ m_board }
 , m_turnOrder{ COMPUTER, HUMAN }
+, m_playMode{ VS_AI_HARD }
 {
 	for (size_t i = 0; i < m_board.size(); ++i)
 	{
@@ -137,19 +138,24 @@ CGame::Process(float _fDeltaTick)
 {
     // Process all the game’s logic here.
 	
+	static std::random_device s_rd;
+	static std::mt19937 s_rng{ s_rd() };
+
 	if (m_turnOrder[m_state.Turn()] == COMPUTER && !m_state.IsTerminal())
 	{
 		size_t actionId;
-		AIUtil::minimax(m_state, &actionId);
+
+		if (m_playMode == VS_AI_HARD)
+		{
+			AIUtil::Minimax(m_state, &actionId);
+		}
+		else
+		{
+			std::uniform_int_distribution<size_t> uni(0, m_state.NumActionsAvailable());
+			actionId = uni(s_rng);
+		}
+
 		m_state.PerformAction(actionId);
-
-		//static std::random_device s_rd;
-		//static std::mt19937 s_rng{ s_rd() };
-
-		//std::uniform_int_distribution<size_t> uni(0, m_state.NumActionsAvailable());
-
-		//size_t actionId = uni(s_rng);
-		//m_state.PerformAction(actionId);
 	}
 }
 
@@ -293,6 +299,26 @@ EWIN_STATE CGame::CheckWinCondition()
 	}
 
 	return NO_WIN;
+}
+
+void CGame::SetPlayMode(EPLAY_MODE playMode)
+{
+	m_playMode = playMode;
+
+	switch (playMode)
+	{
+	case PVP:
+		m_turnOrder = { HUMAN, HUMAN };
+		break;
+	case VS_AI_EASY:
+		m_turnOrder = { COMPUTER, HUMAN };
+		break;
+	case VS_AI_HARD:
+		m_turnOrder = { COMPUTER, HUMAN };
+		break;
+	default:
+		break;
+	}
 }
 
 ETOKEN_TYPE CGame::GetPlayerToken(size_t playerId)

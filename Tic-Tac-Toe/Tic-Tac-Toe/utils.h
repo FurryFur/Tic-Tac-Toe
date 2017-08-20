@@ -56,5 +56,12 @@ enum EWIN_STATE
 	DRAW
 };
 
+enum EPLAY_MODE
+{
+	PVP,
+	VS_AI_EASY,
+	VS_AI_HARD
+};
+
 #endif    // __UTILS_H__
 

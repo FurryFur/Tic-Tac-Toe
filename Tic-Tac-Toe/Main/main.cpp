@@ -18,9 +18,10 @@
 #include <windowsx.h>
 
 //Local Includes
-#include "Game.h"
-#include "Clock.h"
-#include "utils.h"
+#include <Game.h>
+#include <Clock.h>
+#include <utils.h>
+#include <resource.h>
 
 #define WINDOW_CLASS_NAME L"BSENGGFRAMEWORK"
 
@@ -40,8 +41,30 @@ WindowProc(HWND _hWnd, UINT _uiMsg, WPARAM _wParam, LPARAM _lParam)
             PostQuitMessage(0);
 
             return(0);
+			break;
         }
-        break;
+		case WM_COMMAND:
+		{
+			switch (LOWORD(_wParam))
+			{
+			case ID_PLAYMODE_HUMAN:
+			{
+				CGame::GetInstance().SetPlayMode(PVP);
+				break;
+			}
+			case ID_PLAYMODE_AI_EASY:
+			{
+				CGame::GetInstance().SetPlayMode(VS_AI_EASY);
+				break;
+			}
+			case ID_PLAYMODE_AI_HARD:
+			{
+				CGame::GetInstance().SetPlayMode(VS_AI_HARD);
+			}
+			}
+			return(0);
+			break;
+		}
 
         default:break;
     } 
@@ -73,6 +96,8 @@ CreateAndRegisterWindow(HINSTANCE _hInstance, int _iWidth, int _iHeight, LPCWSTR
         return (0);
     }
 
+	HMENU hMenu = LoadMenu(_hInstance, MAKEINTRESOURCE(IDR_MENU1));
+
     HWND hwnd; 
     hwnd = CreateWindowEx(NULL,
                   WINDOW_CLASS_NAME,
@@ -81,7 +106,7 @@ CreateAndRegisterWindow(HINSTANCE _hInstance, int _iWidth, int _iHeight, LPCWSTR
                   CW_USEDEFAULT, CW_USEDEFAULT,
                   _iWidth, _iHeight,
                   NULL,
-                  NULL,
+                  hMenu,
                   _hInstance,
                   NULL);
     
@@ -101,7 +126,7 @@ WinMain(HINSTANCE _hInstance, HINSTANCE _hPrevInstance, LPSTR _lpCmdline, int _i
     ZeroMemory(&msg, sizeof(MSG));
 
     const int kiWidth = 500;
-    const int kiHeight = 500;
+    const int kiHeight = 510;
 
     HWND hwnd = CreateAndRegisterWindow(_hInstance, kiWidth, kiHeight, L"BSENGG Framework");
 

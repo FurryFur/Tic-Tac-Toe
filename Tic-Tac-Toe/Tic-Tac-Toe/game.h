@@ -56,6 +56,7 @@ public:
 
 	void HandleClick();
 	EWIN_STATE CheckWinCondition();
+	void SetPlayMode(EPLAY_MODE playMode);
 	
 	static ETOKEN_TYPE GetPlayerToken(size_t playerId);
 
@@ -85,6 +86,7 @@ protected:
 	CSprite m_crossSprite;
 
 	std::array<EPLAYER_TYPE, 2> m_turnOrder;
+	EPLAY_MODE m_playMode;
 
 	static const int s_kBoardOffsetX;
 	static const int s_kBoardOffsetY;
