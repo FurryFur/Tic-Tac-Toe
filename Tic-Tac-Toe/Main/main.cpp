@@ -50,16 +50,19 @@ WindowProc(HWND _hWnd, UINT _uiMsg, WPARAM _wParam, LPARAM _lParam)
 			case ID_PLAYMODE_HUMAN:
 			{
 				CGame::GetInstance().SetPlayMode(PVP);
+				CGame::GetInstance().Restart();
 				break;
 			}
 			case ID_PLAYMODE_AI_EASY:
 			{
 				CGame::GetInstance().SetPlayMode(VS_AI_EASY);
+				CGame::GetInstance().Restart();
 				break;
 			}
 			case ID_PLAYMODE_AI_HARD:
 			{
 				CGame::GetInstance().SetPlayMode(VS_AI_HARD);
+				CGame::GetInstance().Restart();
 			}
 			}
 			return(0);
@@ -150,11 +153,28 @@ WinMain(HINSTANCE _hInstance, HINSTANCE _hPrevInstance, LPSTR _lpCmdline, int _i
             rGame.ExecuteOneFrame();
 
 			// Check win condition
-			if (rGame.CheckWinCondition() != NO_WIN)
+			EWIN_STATE winState = rGame.CheckWinCondition();
+			if (winState != NO_WIN)
 			{
-				MessageBoxA(hwnd, "Game Over!", "Game Over", MB_OK);
+				switch (winState)
+				{
+				case NOUGHT_WIN:
+					MessageBoxA(hwnd, "Game Over: Noughts Wins", "Game Over", MB_OK);
+					break;
+				case CROSS_WIN:
+					MessageBoxA(hwnd, "Game Over: Crosses Wins", "Game Over", MB_OK);
+					break;
+				case DRAW:
+					MessageBoxA(hwnd, "Game Over: Draw", "Game Over", MB_OK);
+					break;
+				case NO_WIN:
+				default:
+					break;
+				}
 
-				break;
+				
+
+				rGame.Restart();
 			}
         }
     }

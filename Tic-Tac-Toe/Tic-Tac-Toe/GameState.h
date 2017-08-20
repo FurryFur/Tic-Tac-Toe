@@ -9,7 +9,7 @@
 class CGameState : public IState
 {
 public:
-	CGameState(std::array<std::array<ETOKEN_TYPE, 3>, 3>& rBoard);
+	CGameState();
 	virtual ~CGameState();
 
 	// Inherited via IState
@@ -20,11 +20,12 @@ public:
 	virtual size_t NumActionsAvailable() const override;
 	virtual size_t Turn() const override;
 
-	void toggleTurn();
+	void ToggleTurn();
 	void PerformAction(const std::array<size_t, 2>& action);
 
+	std::array<std::array<ETOKEN_TYPE, 3>, 3> m_board;
+
 private:
-	std::array<std::array<ETOKEN_TYPE, 3>, 3>& m_rBoard;
 	CActionList m_availableActions;
 	size_t m_curTurn;
 	mutable EWIN_STATE m_winState;

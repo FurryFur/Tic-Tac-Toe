@@ -57,6 +57,7 @@ public:
 	void HandleClick();
 	EWIN_STATE CheckWinCondition();
 	void SetPlayMode(EPLAY_MODE playMode);
+	void Restart();
 	
 	static ETOKEN_TYPE GetPlayerToken(size_t playerId);
 
@@ -79,7 +80,6 @@ protected:
 
     CBackBuffer* m_pBackBuffer;
 
-	std::array<std::array<ETOKEN_TYPE, 3>, 3> m_board;
 	CGameState m_state;
 	CSprite m_boardSprite;
 	CSprite m_noughtSprite;

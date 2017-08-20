@@ -2,11 +2,17 @@
 #include "game.h"
 
 
-CGameState::CGameState(std::array<std::array<ETOKEN_TYPE, 3>, 3>& rBoard) :
-	m_rBoard{ rBoard },
+CGameState::CGameState() :
 	m_curTurn{ 0 },
 	m_winState{ NO_WIN }
 {
+	for (size_t i = 0; i < m_board.size(); ++i)
+	{
+		for (size_t j = 0; j < m_board[i].size(); ++j)
+		{
+			m_board[i][j] = FREE;
+		}
+	}
 }
 
 
@@ -44,9 +50,9 @@ void CGameState::PerformAction(size_t actionId)
 	const std::array<size_t, 2>& action = m_availableActions.GetAction(actionId);
 	size_t r = action[0];
 	size_t c = action[1];
-	m_rBoard[r][c] = CGame::GetPlayerToken(m_curTurn);
+	m_board[r][c] = CGame::GetPlayerToken(m_curTurn);
 
-	toggleTurn();
+	ToggleTurn();
 	m_availableActions.RemoveAction(actionId);
 }
 
@@ -56,12 +62,12 @@ void CGameState::RollbackAction(size_t actionId)
 		return;
 
 	m_availableActions.RestoreAction(actionId);
-	toggleTurn();
+	ToggleTurn();
 
 	const std::array<size_t, 2>& action = m_availableActions.GetAction(actionId);
 	size_t r = action[0];
 	size_t c = action[1];
-	m_rBoard[r][c] = FREE;
+	m_board[r][c] = FREE;
 }
 
 size_t CGameState::NumActionsAvailable() const
@@ -74,19 +80,14 @@ size_t CGameState::Turn() const
 	return m_curTurn;
 }
 
-void CGameState::toggleTurn()
+void CGameState::ToggleTurn()
 {
 	m_curTurn ^= 1;
 }
 
 void CGameState::PerformAction(const std::array<size_t, 2>& action)
 {
-	size_t r = action[0];
-	size_t c = action[1];
-	size_t guessedStart = r * 3 + c;
-	size_t end = m_availableActions.size() - 1;
-
-	for (int i = guessedStart <= end ? guessedStart : end; i >= 0; --i) // Start search at furthest possible action index
+	for (size_t i = 0; i < m_availableActions.size(); ++i)
 	{
 		if (m_availableActions.GetAction(i) == action)
 		{

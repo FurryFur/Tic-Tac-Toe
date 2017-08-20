@@ -45,17 +45,11 @@ CGame::CGame()
 , m_hApplicationInstance(0)
 , m_hMainWindow(0)
 , m_pBackBuffer(0)
-, m_state{ m_board }
+, m_state{ }
 , m_turnOrder{ COMPUTER, HUMAN }
 , m_playMode{ VS_AI_HARD }
 {
-	for (size_t i = 0; i < m_board.size(); ++i)
-	{
-		for (size_t j = 0; j < m_board[i].size(); ++j)
-		{
-			m_board[i][j] = FREE;
-		}
-	}
+	
 }
 
 CGame::~CGame()
@@ -101,18 +95,18 @@ CGame::Draw()
 	m_boardSprite.Draw();
 
 	int yOffset = s_kBoardOffsetY;
-	for (size_t i = 0; i < m_board.size(); ++i)
+	for (size_t i = 0; i < m_state.m_board.size(); ++i)
 	{
 		int xOffset = s_kBoardOffsetX;
-		for (size_t j = 0; j < m_board[i].size(); ++j)
+		for (size_t j = 0; j < m_state.m_board[i].size(); ++j)
 		{
 			// Select token to draw
 			CSprite* pCurSprite = nullptr;
-			if (m_board[i][j] == NOUGHT)
+			if (m_state.m_board[i][j] == NOUGHT)
 			{
 				pCurSprite = &m_noughtSprite;
 			}
-			else if (m_board[i][j] == CROSS)
+			else if (m_state.m_board[i][j] == CROSS)
 			{
 				pCurSprite = &m_crossSprite;
 			}
@@ -209,7 +203,7 @@ void CGame::HandleClick()
 			clickedCellRow = clickedCellRow < 0 ? 0 : clickedCellRow;
 			clickedCellRow = clickedCellRow > 2 ? 2 : clickedCellRow;
 
-			if (m_board[clickedCellRow][clickedCellCol] == FREE)
+			if (m_state.m_board[clickedCellRow][clickedCellCol] == FREE)
 			{
 				m_state.PerformAction({ static_cast<size_t>(clickedCellRow), static_cast<size_t>(clickedCellCol) });
 			}
@@ -225,14 +219,14 @@ EWIN_STATE CGame::CheckDiagWinCondition(bool offDiagonal)
 
 	if (offDiagonal)
 	{
-		c = m_board.size() - 1;
+		c = m_state.m_board.size() - 1;
 		deltac = -1;
 	}
 
-	ETOKEN_TYPE firstCell = m_board[r][c];
-	for (; r < m_board.size() && c < m_board.size(); ++r, c += deltac)
+	ETOKEN_TYPE firstCell = m_state.m_board[r][c];
+	for (; r < m_state.m_board.size() && c < m_state.m_board.size(); ++r, c += deltac)
 	{
-		if (m_board[r][c] == FREE || m_board[r][c] != firstCell)
+		if (m_state.m_board[r][c] == FREE || m_state.m_board[r][c] != firstCell)
 		{
 			return NO_WIN;
 		}
@@ -248,14 +242,14 @@ EWIN_STATE CGame::CheckWinCondition()
 	std::array<bool, 3> vertWin{ true, true, true };
 	for (int r = 0; r < 3; ++r)
 	{
-		ETOKEN_TYPE firstCellH = m_board[r][0];
+		ETOKEN_TYPE firstCellH = m_state.m_board[r][0];
 
 		bool horizWin = true;
 		for (int c = 0; c < 3; ++c)
 		{
-			ETOKEN_TYPE firstCellV = m_board[0][c];
+			ETOKEN_TYPE firstCellV = m_state.m_board[0][c];
 
-			if (m_board[r][c] == FREE)
+			if (m_state.m_board[r][c] == FREE)
 			{
 				horizWin = false;
 				vertWin[c] = false;
@@ -263,11 +257,11 @@ EWIN_STATE CGame::CheckWinCondition()
 			}
 			else
 			{
-				if (m_board[r][c] != firstCellH)
+				if (m_state.m_board[r][c] != firstCellH)
 				{
 					horizWin = false;
 				}
-				if (m_board[r][c] != firstCellV)
+				if (m_state.m_board[r][c] != firstCellV)
 				{
 					vertWin[c] = false;
 				}
@@ -284,13 +278,13 @@ EWIN_STATE CGame::CheckWinCondition()
 	{
 		if (vertWin[c])
 		{
-			return static_cast<EWIN_STATE>(m_board[0][c]);
+			return static_cast<EWIN_STATE>(m_state.m_board[0][c]);
 		}
 	}
 
 	if (CheckDiagWinCondition(false) != NO_WIN || CheckDiagWinCondition(true) != NO_WIN)
 	{
-		return static_cast<EWIN_STATE>(m_board[1][1]);
+		return static_cast<EWIN_STATE>(m_state.m_board[1][1]);
 	}
 
 	if (draw)
@@ -319,6 +313,11 @@ void CGame::SetPlayMode(EPLAY_MODE playMode)
 	default:
 		break;
 	}
+}
+
+void CGame::Restart()
+{
+	m_state = CGameState();
 }
 
 ETOKEN_TYPE CGame::GetPlayerToken(size_t playerId)
