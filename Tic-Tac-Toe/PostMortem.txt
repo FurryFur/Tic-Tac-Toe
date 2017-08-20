@@ -1,0 +1,11 @@
+Writing a generic minimax using interfaces resulted in a clean and testable minimax implementation.
+Unfortunately I wasn't able to find a good way of testing that each minimax node gets the correct utility value.
+However I was able to check the final utility, the accessed nodes and the resulting action for correctness.
+
+I would have liked to have written more tests for the games implementation of the state interface (used by the minimax algorithm).
+And also the ActionList class I wrote to keep track of the current available actions.
+However, I was short on time so didn't end up writing test cases for these.
+
+Some code is probably unnecessarily split up between the CGameState and CGame classes.
+This is a result of implementing some things in CGame initially before I decided to use CGameState 
+(the implementation of the state interface used in the minimax algorithm).
