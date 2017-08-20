@@ -22,11 +22,42 @@ class IState
 public:
 	virtual ~IState() {};
 
+	/// <summary>
+	/// Determines whether this state is terminal.
+	/// </summary>
+	/// <returns>
+	///   <c>true</c> if this state is terminal; otherwise, <c>false</c>.
+	/// </returns>
 	virtual bool IsTerminal() const = 0;
+
+	/// <summary>
+	/// Returns the utility heuristic for this state.
+	/// </summary>
+	/// <returns>The utility heuristic for this state.</returns>
 	virtual int Utility() const = 0;
+
+	/// <summary>
+	/// Performs the action with id <paramref name="actionId"/>
+	/// </summary>
+	/// <param name="actionId">The action identifier.</param>
 	virtual void PerformAction(size_t actionId) = 0;
+
+	/// <summary>
+	/// Rolls back the action with id <paramref name="actionId"/>.
+	/// </summary>
+	/// <param name="actionId">The action identifier.</param>
 	virtual void RollbackAction(size_t actionId) = 0;
+
+	/// <summary>
+	/// Returns the number of available actions.
+	/// </summary>
+	/// <returns>The number of available actions.</returns>
 	virtual size_t NumActionsAvailable() const = 0;
+
+	/// <summary>
+	/// Returns whos turn it is (player id 0 or 1).
+	/// </summary>
+	/// <returns>Whos turn it is (player id 0 or 1).</returns>
 	virtual size_t Turn() const = 0;
 
 protected:

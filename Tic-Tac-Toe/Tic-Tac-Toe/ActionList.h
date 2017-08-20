@@ -40,8 +40,17 @@ public:
 	/// <param name="actionIdx">The index to restore the previous action to.</param>
 	void RestoreAction(size_t actionIdx);
 
+	/// <summary>
+	/// Gets the action at the specified index
+	/// </summary>
+	/// <param name="actionIdx">Index of the action.</param>
+	/// <returns>The action as a tuple containing the row and column position to place at.</returns>
 	const std::array<size_t, 2>& GetAction(size_t actionIdx) const;
 
+	/// <summary>
+	/// Returns the number of actions in the list.
+	/// </summary>
+	/// <returns>The number of actions in the list.</returns>
 	size_t size() const;
 
 private:

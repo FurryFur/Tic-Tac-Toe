@@ -235,7 +235,7 @@ EWIN_STATE CGame::CheckDiagWinCondition(bool offDiagonal)
 	return static_cast<EWIN_STATE>(firstCell);
 }
 
-EWIN_STATE CGame::CheckWinCondition()
+EWIN_STATE CGame::GetWinState()
 {
 	// Check horizontal and vertical win condition
 	bool draw = true;

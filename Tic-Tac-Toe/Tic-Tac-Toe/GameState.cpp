@@ -34,7 +34,7 @@ CGameState::~CGameState()
 
 bool CGameState::IsTerminal() const
 {
-	m_winState = CGame::GetInstance().CheckWinCondition();
+	m_winState = CGame::GetInstance().GetWinState();
 	return m_winState != NO_WIN;
 }
 
