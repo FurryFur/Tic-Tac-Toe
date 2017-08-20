@@ -13,6 +13,7 @@
 //
 
 //Library Includes
+#define NOMINMAX
 #include <windows.h>
 #include <windowsx.h>
 
@@ -124,7 +125,7 @@ WinMain(HINSTANCE _hInstance, HINSTANCE _hPrevInstance, LPSTR _lpCmdline, int _i
             rGame.ExecuteOneFrame();
 
 			// Check win condition
-			if (rGame.CheckWinCondition())
+			if (rGame.CheckWinCondition() != NO_WIN)
 			{
 				MessageBoxA(hwnd, "Game Over!", "Game Over", MB_OK);
 

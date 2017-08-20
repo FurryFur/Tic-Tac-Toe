@@ -13,6 +13,7 @@
 //
 
 // Library Includes
+#define NOMINMAX
 #include <windows.h>
 
 // Local Includes

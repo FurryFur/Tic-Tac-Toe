@@ -16,12 +16,15 @@
 #define __GAME_H__
 
 // Library Includes
+#define NOMINMAX
 #include <windows.h>
 #include <array>
 
 // Local Includes
 #include "clock.h"
 #include "sprite.h"
+#include "GameState.h"
+#include "utils.h"
 
 // Types
 
@@ -38,12 +41,6 @@ public:
 
     bool Initialise(HINSTANCE _hInstance, HWND _hWnd, int _iWidth, int _iHeight);
 
-	enum ECELL_STATE {
-		NOUGHT,
-		CROSS,
-		FREE
-	};
-
     void Draw();
     void Process(float _fDeltaTick);
 
@@ -58,7 +55,9 @@ public:
     static void DestroyInstance();
 
 	void HandleClick();
-	bool CheckWinCondition();
+	EWIN_STATE CheckWinCondition();
+	
+	static ETOKEN_TYPE GetPlayerToken(size_t playerId);
 
 protected:
 
@@ -69,7 +68,7 @@ private:
 
 	// Check for a win condition along the specified diagonal
 	// offDiagonal: true or false, whether we are checking the off diagonal for the win condition
-	bool CheckDiagWinCondition(bool offDiagonal = false);
+	EWIN_STATE CheckDiagWinCondition(bool offDiagonal = false);
 
     // Member Variables
 public:
@@ -79,10 +78,13 @@ protected:
 
     CBackBuffer* m_pBackBuffer;
 
-	std::array<std::array<ECELL_STATE, 3>, 3> m_board;
+	std::array<std::array<ETOKEN_TYPE, 3>, 3> m_board;
+	CGameState m_state;
 	CSprite m_boardSprite;
 	CSprite m_noughtSprite;
 	CSprite m_crossSprite;
+
+	std::array<EPLAYER_TYPE, 2> m_turnOrder;
 
 	static const int s_kBoardOffsetX;
 	static const int s_kBoardOffsetY;

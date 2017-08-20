@@ -150,16 +150,20 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="ActionList.cpp" />
     <ClCompile Include="backbuffer.cpp" />
     <ClCompile Include="clock.cpp" />
     <ClCompile Include="game.cpp" />
+    <ClCompile Include="GameState.cpp" />
     <ClCompile Include="sprite.cpp" />
     <ClCompile Include="AIUtil.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="ActionList.h" />
     <ClInclude Include="backbuffer.h" />
     <ClInclude Include="clock.h" />
     <ClInclude Include="game.h" />
+    <ClInclude Include="GameState.h" />
     <ClInclude Include="State.h" />
     <ClInclude Include="resource.h" />
     <ClInclude Include="sprite.h" />

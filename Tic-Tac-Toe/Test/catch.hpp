@@ -584,15 +584,15 @@ namespace Catch {
         }
         Ptr& operator = ( T* p ){
             Ptr temp( p );
-            swap( temp );
+            Swap( temp );
             return *this;
         }
         Ptr& operator = ( Ptr const& other ){
             Ptr temp( other );
-            swap( temp );
+            Swap( temp );
             return *this;
         }
-        void swap( Ptr& other ) { std::swap( m_p, other.m_p ); }
+        void Swap( Ptr& other ) { std::Swap( m_p, other.m_p ); }
         T* get() const{ return m_p; }
         T& operator*() const { return *m_p; }
         T* operator->() const { return m_p; }
@@ -3284,7 +3284,7 @@ namespace Catch {
 
         TestCaseInfo const& getTestCaseInfo() const;
 
-        void swap( TestCase& other );
+        void Swap( TestCase& other );
         bool operator == ( TestCase const& other ) const;
         bool operator < ( TestCase const& other ) const;
         TestCase& operator = ( TestCase const& other );
@@ -6890,7 +6890,7 @@ namespace Catch {
             bool missingAssertions = testForMissingAssertions( assertions );
 
             if( testCaseInfo.okToFail() ) {
-                std::swap( assertions.failedButOk, assertions.failed );
+                std::Swap( assertions.failedButOk, assertions.failed );
                 m_totals.assertions.failed -= assertions.failedButOk;
                 m_totals.assertions.failedButOk += assertions.failedButOk;
             }
@@ -8337,16 +8337,16 @@ namespace Catch {
         return other;
     }
 
-    void TestCase::swap( TestCase& other ) {
-        test.swap( other.test );
-        name.swap( other.name );
-        className.swap( other.className );
-        description.swap( other.description );
-        tags.swap( other.tags );
-        lcaseTags.swap( other.lcaseTags );
-        tagsAsString.swap( other.tagsAsString );
-        std::swap( TestCaseInfo::properties, static_cast<TestCaseInfo&>( other ).properties );
-        std::swap( lineInfo, other.lineInfo );
+    void TestCase::Swap( TestCase& other ) {
+        test.Swap( other.test );
+        name.Swap( other.name );
+        className.Swap( other.className );
+        description.Swap( other.description );
+        tags.Swap( other.tags );
+        lcaseTags.Swap( other.lcaseTags );
+        tagsAsString.Swap( other.tagsAsString );
+        std::Swap( TestCaseInfo::properties, static_cast<TestCaseInfo&>( other ).properties );
+        std::Swap( lineInfo, other.lineInfo );
     }
 
     void TestCase::invoke() const {
@@ -8364,7 +8364,7 @@ namespace Catch {
     }
     TestCase& TestCase::operator = ( TestCase const& other ) {
         TestCase temp( other );
-        swap( temp );
+        Swap( temp );
         return *this;
     }
 
@@ -9755,12 +9755,12 @@ namespace Catch {
         }
         virtual void testGroupEnded( TestGroupStats const& testGroupStats ) CATCH_OVERRIDE {
             Ptr<TestGroupNode> node = new TestGroupNode( testGroupStats );
-            node->children.swap( m_testCases );
+            node->children.Swap( m_testCases );
             m_testGroups.push_back( node );
         }
         virtual void testRunEnded( TestRunStats const& testRunStats ) CATCH_OVERRIDE {
             Ptr<TestRunNode> node = new TestRunNode( testRunStats );
-            node->children.swap( m_testGroups );
+            node->children.Swap( m_testGroups );
             m_testRuns.push_back( node );
             testRunEndedCumulative();
         }

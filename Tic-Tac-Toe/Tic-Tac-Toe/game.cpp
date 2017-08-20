@@ -14,6 +14,7 @@
 
 // Library Includes
 #include <algorithm>
+#include <random>
 
 // Local Includes
 #include "Clock.h"
@@ -21,7 +22,7 @@
 #include "utils.h"
 #include "sprite.h"
 #include "resource.h"
-
+#include "AIUtil.h"
 
 // This Include
 #include "Game.h"
@@ -33,6 +34,7 @@ const int CGame::s_kBoardOffsetX = 35;
 const int CGame::s_kBoardOffsetY = 20;
 const int CGame::s_kBoardDividerWidth = 10;
 const int CGame::s_kBoardCellSize = 130;
+const std::array<ETOKEN_TYPE, 2> s_kPlayerTokens = { CROSS, NOUGHT };
 
 // Static Function Prototypes
 
@@ -43,6 +45,8 @@ CGame::CGame()
 , m_hApplicationInstance(0)
 , m_hMainWindow(0)
 , m_pBackBuffer(0)
+, m_state{ m_board }
+, m_turnOrder{ COMPUTER, HUMAN }
 {
 	for (size_t i = 0; i < m_board.size(); ++i)
 	{
@@ -51,30 +55,6 @@ CGame::CGame()
 			m_board[i][j] = FREE;
 		}
 	}
-}
-
-bool CGame::CheckDiagWinCondition(bool offDiagonal)
-{
-	size_t r = 0;
-	size_t c = 0;
-	int deltac = 1;
-
-	if (offDiagonal)
-	{
-		c = m_board.size() - 1;
-		deltac = -1;
-	}
-
-	ECELL_STATE firstCell = m_board[r][c];
-	for (; r < m_board.size() && c < m_board.size(); ++r, c += deltac)
-	{
-		if (m_board[r][c] == FREE || m_board[r][c] != firstCell)
-		{
-			return false;
-		}
-	}
-
-	return true;
 }
 
 CGame::~CGame()
@@ -156,8 +136,21 @@ void
 CGame::Process(float _fDeltaTick)
 {
     // Process all the game’s logic here.
-	//Load a new sprite.
 	
+	if (m_turnOrder[m_state.Turn()] == COMPUTER && !m_state.IsTerminal())
+	{
+		size_t actionId;
+		AIUtil::minimax(m_state, &actionId);
+		m_state.PerformAction(actionId);
+
+		//static std::random_device s_rd;
+		//static std::mt19937 s_rng{ s_rd() };
+
+		//std::uniform_int_distribution<size_t> uni(0, m_state.NumActionsAvailable());
+
+		//size_t actionId = uni(s_rng);
+		//m_state.PerformAction(actionId);
+	}
 }
 
 void 
@@ -193,6 +186,9 @@ CGame::DestroyInstance()
 
 void CGame::HandleClick()
 {
+	if (m_turnOrder[m_state.Turn()] == COMPUTER)
+		return;
+
 	POINT p;
 	if (GetCursorPos(&p))
 	{
@@ -209,145 +205,100 @@ void CGame::HandleClick()
 
 			if (m_board[clickedCellRow][clickedCellCol] == FREE)
 			{
-				m_board[clickedCellRow][clickedCellCol] = NOUGHT;
+				m_state.PerformAction({ static_cast<size_t>(clickedCellRow), static_cast<size_t>(clickedCellCol) });
 			}
 		}
 	}
 }
 
-bool isValidBoardPos(int i, int j)
+EWIN_STATE CGame::CheckDiagWinCondition(bool offDiagonal)
 {
-	return i >= 0 && i < 3 && j >= 0 && j < 3;
-}
+	size_t r = 0;
+	size_t c = 0;
+	int deltac = 1;
 
-// Check if any element in a boolean array is set to true
-template <size_t sz>
-bool any(std::array<bool, sz> arr)
-{
-	for (size_t i = 0; i < arr.size(); ++i)
+	if (offDiagonal)
 	{
-		if (arr[i])
+		c = m_board.size() - 1;
+		deltac = -1;
+	}
+
+	ETOKEN_TYPE firstCell = m_board[r][c];
+	for (; r < m_board.size() && c < m_board.size(); ++r, c += deltac)
+	{
+		if (m_board[r][c] == FREE || m_board[r][c] != firstCell)
 		{
-			return true;
+			return NO_WIN;
 		}
 	}
 
-	return false;
+	return static_cast<EWIN_STATE>(firstCell);
 }
 
-bool CGame::CheckWinCondition()
+EWIN_STATE CGame::CheckWinCondition()
 {
 	// Check horizontal and vertical win condition
+	bool draw = true;
 	std::array<bool, 3> vertWin{ true, true, true };
 	for (int r = 0; r < 3; ++r)
 	{
-		ECELL_STATE firstCellH = m_board[r][0];
+		ETOKEN_TYPE firstCellH = m_board[r][0];
 
 		bool horizWin = true;
 		for (int c = 0; c < 3; ++c)
 		{
-			ECELL_STATE firstCellV = m_board[0][c];
+			ETOKEN_TYPE firstCellV = m_board[0][c];
 
-			if (horizWin && (m_board[r][c] == FREE || m_board[r][c] != firstCellH))
+			if (m_board[r][c] == FREE)
 			{
 				horizWin = false;
-			}
-			if (vertWin[c] && (m_board[r][c] == FREE || m_board[r][c] != firstCellV))
-			{
 				vertWin[c] = false;
+				draw = false;
+			}
+			else
+			{
+				if (m_board[r][c] != firstCellH)
+				{
+					horizWin = false;
+				}
+				if (m_board[r][c] != firstCellV)
+				{
+					vertWin[c] = false;
+				}
 			}
 		}
 
 		if (horizWin)
 		{
-			return true;
+			return static_cast<EWIN_STATE>(firstCellH);
+		}
+	}
+	
+	for (size_t c = 0; c < 3; ++c)
+	{
+		if (vertWin[c])
+		{
+			return static_cast<EWIN_STATE>(m_board[0][c]);
 		}
 	}
 
-	if (any(vertWin))
+	if (CheckDiagWinCondition(false) != NO_WIN || CheckDiagWinCondition(true) != NO_WIN)
 	{
-		return true;
+		return static_cast<EWIN_STATE>(m_board[1][1]);
 	}
 
-	// Check diagonal win conditions
-	if (CheckDiagWinCondition(false) || CheckDiagWinCondition(true))
+	if (draw)
 	{
-		return true;
+		return DRAW;
 	}
 
-	return false;
+	return NO_WIN;
 }
 
-//bool CGame::CheckWinCondition()
-//{
-//	for (int y = 0; y < m_board.size(); ++y)
-//	{
-//		for (int x = 0; x < m_board[0].size(); ++x)
-//		{
-//			// Get token type at location
-//			ECELL_STATE cell_state = m_board[y][x];
-//			if (cell_state != FREE)
-//			{
-//				// Iterate over 8 all directions
-//				int xDir = 1;
-//				int xDirDelta = -1;
-//				int yDir = 0;
-//				int yDirDelta = -1;
-//				for (int k = 0; k < 8; ++k)
-//				{
-//					if (xDir + xDirDelta < -1 || xDir + xDirDelta > 1)
-//					{
-//						xDirDelta *= -1;
-//					}
-//					if (yDir + yDirDelta < -1 || yDir + yDirDelta > 1)
-//					{
-//						yDirDelta *= -1;
-//					}
-//
-//					xDir += xDirDelta;
-//					yDir += yDirDelta;
-//
-//					// Explore direction
-//					int curX = x;
-//					int curY = y;
-//					size_t inARow = 0;
-//					for (int l = 0; l < 3; ++l)
-//					{
-//						if (isValidBoardPos(curX, curY))
-//						{
-//							// Check if adjacent cell has same token type
-//							if (m_board[curY][curX] == cell_state)
-//							{
-//								++inARow;
-//							}
-//							// Break loop when line of tokens is broken
-//							else
-//							{
-//								break;
-//							}
-//						}
-//						// Break at edges
-//						else
-//						{
-//							break;
-//						}
-//
-//						curX += xDir;
-//						curY += yDir;
-//					}
-//
-//					// If we found 3 in a row then someone won
-//					if (inARow == 3)
-//					{
-//						return true;
-//					}
-//				}
-//			}
-//		}
-//	}
-//
-//	return false;
-//}
+ETOKEN_TYPE CGame::GetPlayerToken(size_t playerId)
+{
+	return s_kPlayerTokens.at(playerId);
+}
 
 CBackBuffer* 
 CGame::GetBackBuffer()

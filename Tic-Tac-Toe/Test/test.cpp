@@ -14,13 +14,13 @@ class TestState : public IState
 {
 public:
 	// Inherited via IState
-	virtual bool isTerminal() const override
+	virtual bool IsTerminal() const override
 	{
 		return curDepth == kMaxDepth;
 	}
-	virtual int utility() const override
+	virtual int Utility() const override
 	{
-		if (isTerminal())
+		if (IsTerminal())
 		{
 			return terminalNodeUtil[curPath[0] * kBranchFactor * kBranchFactor + curPath[1] * kBranchFactor + curPath[2]];
 		}
@@ -29,7 +29,7 @@ public:
 			return (curTurn == 0) ? std::numeric_limits<int>::min() : std::numeric_limits<int>::max();
 		}
 	}
-	virtual void performAction(size_t actionId) override
+	virtual void PerformAction(size_t actionId) override
 	{
 		curPath[curDepth] = actionId;
 
@@ -52,17 +52,17 @@ public:
 
 		curTurn ^= 1;
 	}
-	virtual void rollbackAction(size_t actionId) override
+	virtual void RollbackAction(size_t actionId) override
 	{
 		--curDepth;
 
 		curTurn ^= 1;
 	}
-	virtual size_t numActionsAvailable() const override
+	virtual size_t NumActionsAvailable() const override
 	{
 		return kBranchFactor;
 	}
-	virtual size_t turn() const override
+	virtual size_t Turn() const override
 	{
 		return curTurn;
 	}
@@ -95,8 +95,8 @@ TEST_CASE("Minimax")
 
 	size_t expectedActionId = 2;
 	size_t actualActionId;
-	int utility = AIUtil::minimax(state, &actualActionId);
-	REQUIRE(utility == 11);
+	int Utility = AIUtil::minimax(state, &actualActionId);
+	REQUIRE(Utility == 11);
 	REQUIRE(actualActionId == expectedActionId);
 	REQUIRE(state.actualAccess == state.expectedAccess);
 }

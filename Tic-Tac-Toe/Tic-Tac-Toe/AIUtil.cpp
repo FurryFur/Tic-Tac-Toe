@@ -5,18 +5,18 @@ namespace AIUtil
 {
 	int minimax(IState& rState, size_t* pBestActionId, int alpha, int beta)
 	{
-		int& rBestActionUtility = (rState.turn() == 0) ? alpha : beta;
+		int& rBestActionUtility = (rState.Turn() == 0) ? alpha : beta;
 
-		for (size_t i = 0; (alpha < beta) && i < rState.numActionsAvailable(); ++i)
+		for (size_t i = 0; (alpha < beta) && i < rState.NumActionsAvailable(); ++i)
 		{
 			// Goto child state
-			rState.performAction(i);
+			rState.PerformAction(i);
 
 			// Get state utility
 			int stateUtility;
-			if (rState.isTerminal())
+			if (rState.IsTerminal())
 			{
-				stateUtility = rState.utility();
+				stateUtility = rState.Utility();
 			}
 			else
 			{
@@ -24,10 +24,10 @@ namespace AIUtil
 			}
 
 			// Revert to parent state 
-			rState.rollbackAction(i);
+			rState.RollbackAction(i);
 
 			// Update best utility so far
-			if ((rState.turn() == 0) ? (stateUtility > rBestActionUtility) : (stateUtility < rBestActionUtility))
+			if ((rState.Turn() == 0) ? (stateUtility > rBestActionUtility) : (stateUtility < rBestActionUtility))
 			{
 				// Set best action for the root node
 				if (pBestActionId != nullptr)

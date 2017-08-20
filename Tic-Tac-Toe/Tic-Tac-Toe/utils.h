@@ -36,5 +36,25 @@ std::string ToString(const T& _value)
     return (theStream.str());
 }
 
+enum ETOKEN_TYPE {
+	NOUGHT,
+	CROSS,
+	FREE
+};
+
+enum EPLAYER_TYPE
+{
+	HUMAN,
+	COMPUTER
+};
+
+enum EWIN_STATE
+{
+	NOUGHT_WIN,
+	CROSS_WIN,
+	NO_WIN,
+	DRAW
+};
+
 #endif    // __UTILS_H__
 

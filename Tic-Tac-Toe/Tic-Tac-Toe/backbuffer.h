@@ -16,6 +16,7 @@
 #define __BACKBUFFER_H__
 
 // Library Includes
+#define NOMINMAX
 #include <Windows.h>
 
 // Local Includes

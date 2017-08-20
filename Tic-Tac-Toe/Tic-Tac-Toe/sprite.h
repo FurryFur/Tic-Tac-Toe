@@ -16,6 +16,7 @@
 #define __SPRITE_H__
 
 // Library Includes
+#define NOMINMAX
 #include "windows.h"
 
 // Local Includes
