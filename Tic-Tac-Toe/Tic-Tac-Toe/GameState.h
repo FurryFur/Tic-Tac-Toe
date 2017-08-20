@@ -1,4 +1,21 @@
+//
+// Bachelor of Software Engineering
+// Media Design School
+// Auckland
+// New Zealand
+//
+// (c) 2016 Media Design School
+//
+// File Name	: GameState.h
+// Description	: Header file for CGameState class
+// Author		: Lance Chaney
+// Mail			: lance.cha7337@mediadesign.school.nz
+//
+
 #pragma once
+
+#ifndef GAMESTATE_H
+#define GAMESTATE_H
 
 #include <array>
 
@@ -31,3 +48,4 @@ private:
 	mutable EWIN_STATE m_winState;
 };
 
+#endif // GAMESTATE_H

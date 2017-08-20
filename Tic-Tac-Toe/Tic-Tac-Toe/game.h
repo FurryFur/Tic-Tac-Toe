@@ -6,10 +6,10 @@
 //
 // (c) 2016 Media Design School
 //
-// File Name	: 
-// Description	: 
-// Author		: Your Name
-// Mail			: your.name@mediadesign.school.nz
+// File Name	: game.h
+// Description	: Header file for CGame class
+// Author		: Lance Chaney
+// Mail			: lance.cha7337@mediadesign.school.nz
 //
 
 #if !defined(__GAME_H__)

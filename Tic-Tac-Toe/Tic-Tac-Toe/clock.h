@@ -6,10 +6,10 @@
 //
 // (c) 2016 Media Design School
 //
-// File Name	: 
-// Description	: 
-// Author		: Your Name
-// Mail			: your.name@mediadesign.school.nz
+// File Name	: clock.h
+// Description	: Header file for CClock class
+// Author		: Lance Chaney
+// Mail			: lance.cha7337@mediadesign.school.nz
 //
 
 #if !defined(__CLOCK_H__)

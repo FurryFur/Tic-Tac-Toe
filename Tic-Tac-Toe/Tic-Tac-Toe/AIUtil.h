@@ -1,4 +1,21 @@
+//
+// Bachelor of Software Engineering
+// Media Design School
+// Auckland
+// New Zealand
+//
+// (c) 2016 Media Design School
+//
+// File Name	: AIUtil.h
+// Description	: Header file for AI utility functions
+// Author		: Lance Chaney
+// Mail			: lance.cha7337@mediadesign.school.nz
+//
+
 #pragma once
+
+#ifndef AIUTIL_H
+#define AIUTIL_H
 
 #include <limits>
 
@@ -20,3 +37,5 @@ namespace AIUtil
 	/// <returns>Utility of the current state.</returns>
 	int Minimax(IState& rState, size_t* pBestActionId, int alpha = std::numeric_limits<int>::min(), int beta = std::numeric_limits<int>::max());
 }
+
+#endif // AIUTIL_H

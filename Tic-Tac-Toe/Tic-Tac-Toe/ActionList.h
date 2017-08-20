@@ -1,4 +1,21 @@
+//
+// Bachelor of Software Engineering
+// Media Design School
+// Auckland
+// New Zealand
+//
+// (c) 2016 Media Design School
+//
+// File Name	: ActionList.h
+// Description	: Header file for CActionList class
+// Author		: Lance Chaney
+// Mail			: lance.cha7337@mediadesign.school.nz
+//
+
 #pragma once
+
+#ifndef ACTIONLIST_H
+#define ACTIONLIST_H
 
 #include <array>
 
@@ -34,3 +51,4 @@ private:
 	void Swap(size_t idx1, size_t idx2);
 };
 
+#endif // !ACTIONLIST_H

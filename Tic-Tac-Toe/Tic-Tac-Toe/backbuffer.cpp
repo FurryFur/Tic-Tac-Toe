@@ -6,10 +6,10 @@
 //
 // (c) 2016 Media Design School
 //
-// File Name	: 
-// Description	: 
-// Author		: Your Name
-// Mail			: your.name@mediadesign.school.nz
+// File Name	: backbuffer.cpp
+// Description	: Implementation file for CBackBuffer class
+// Author		: Lance Chaney
+// Mail			: lance.cha7337@mediadesign.school.nz
 //
 
 // Library Includes

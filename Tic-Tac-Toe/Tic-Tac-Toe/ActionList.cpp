@@ -1,6 +1,18 @@
+//
+// Bachelor of Software Engineering
+// Media Design School
+// Auckland
+// New Zealand
+//
+// (c) 2016 Media Design School
+//
+// File Name	: ActionList.cpp
+// Description	: Implementation file for CActionList class
+// Author		: Lance Chaney
+// Mail			: lance.cha7337@mediadesign.school.nz
+//
+
 #include "ActionList.h"
-
-
 
 CActionList::CActionList() :
 	m_curEnd{m_actions.size() - 1}
@@ -13,7 +25,6 @@ CActionList::CActionList() :
 		}
 	}
 }
-
 
 CActionList::~CActionList()
 {
